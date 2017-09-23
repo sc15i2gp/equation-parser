@@ -2,6 +2,10 @@ from Production import *
 
 def main():
     p = Production("a", "b")
-    p.output()
+    print("Production rule: " + p.output())
+    if p.generate("a"):
+        print("Yay")
+    else:
+        print("Nay")
 
 main()

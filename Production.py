@@ -5,4 +5,10 @@ class Production:
         self.rightSide = rightSide
 
     def output(self):
-        print(self.leftSide + " ==> " + self.rightSide)
+        return self.leftSide + " ==> " + self.rightSide
+
+    def generate(self, inputSymbol):
+        if inputSymbol == self.leftSide:
+            return self.rightSide
+        else:
+            return ""
