@@ -14,5 +14,6 @@ def genTestGrammar():
 def main():
     g = genTestGrammar()
     print(g.output())
+    print(g.isTerminal("q"))
 
 main()

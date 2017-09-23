@@ -18,3 +18,9 @@ class Grammar:
             productionSet.append(production.output())
         outputString += str(productionSet)
         return outputString
+
+    def isTerminal(self, symbol):
+        return symbol in self.terminals
+
+    def isVariable(self, symbol):
+        return symbol in self.variables
