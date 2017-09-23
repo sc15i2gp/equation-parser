@@ -3,3 +3,6 @@ class Production:
     def __init__(self, leftSide, rightSide):
         self.leftSide = leftSide
         self.rightSide = rightSide
+
+    def output(self):
+        print(self.leftSide + " ==> " + self.rightSide)
