@@ -1,19 +1,125 @@
 from Grammar import *
+from ParseTree import *
 
-def genTestGrammar():
-    p0 = Production("S", "T")
-    p1 = Production("T", "a")
-    p2 = Production("T", "b")
-    variables = ["S", "T"]
-    terminals = ["a", "b"]
-    startSymbol = "S"
-    productions = [p0, p1, p2]
-    grammar = Grammar(variables, terminals, startSymbol, productions)
-    return grammar
+def printCYKPTable(cykPTable):
+    print("CYK P Table: ")
+    bar = ""
+    for i in range(160):
+        bar += "-"
+    print(bar)
+    for row in cykPTable:
+        for column in row:
+            string = str(column)
+            maxStrLen = 32
+            for i in range(maxStrLen - len(string)):
+                string += " "
+            print(string, end="")
+        print()
+    print("\n")
+
+def printCYKTable(cykTable):
+    print("CYK Table: ")
+    bar = ""
+    for i in range(160):
+        bar += "-"
+    print(bar)
+    for row in cykTable:
+        for column in row:
+            maxStrLen = 32
+            string = "["
+            if len(column) > 0:
+                string += column[0]
+                if len(column) > 1:
+                    string += ", " + column[1]
+            string += "]"
+            strLen = len(string)
+            for i in range(maxStrLen - strLen):
+                string += " "
+            print(string, end="")
+        print()
+    print("\n")
+
+def printParseTree(rootNode):
+    print(rootNode.nodeSymbol)
+    if len(rootNode.children) > 0:
+        printParseTree(rootNode.children[0])
+        printParseTree(rootNode.children[1])
+
+
+def constructParseTree(cykTable, cykPTable, grammar, n):
+    #Process:
+        #Input: current node coords in table, currentSymbol, parent node
+        #Create current node: ParseTree(currentSymbol, parent node)
+        #Get coords for child symbols
+        #If coords not -1
+            #For each combination of symbols:
+                #If the current node generates the 2 symbols:
+                    #Set left child node as 1st symbol
+                    #Set right child node as 2nd symbol
+    def constructNode(currentNodeCoords, currentSymbol, parentNode):
+        currentNode = ParseTree(currentSymbol, parentNode)
+        currentTableList = cykPTable[currentNodeCoords[0]][currentNodeCoords[1]]
+        if currentTableList[0] != -1:
+            firstCoords = currentTableList[0][0]
+            secondCoords = currentTableList[0][1]
+            firstTablePos = cykTable[firstCoords[0]][firstCoords[1]]
+            secondTablePos = cykTable[secondCoords[0]][secondCoords[1]]
+            for symbol1 in firstTablePos:
+                br = False
+                for symbol2 in secondTablePos:
+                    if grammar.isProductionRule(currentSymbol, [symbol1, symbol2]):
+                        currentNode.children.append(constructNode(firstCoords, symbol1, currentNode))
+                        currentNode.children.append(constructNode(secondCoords, symbol2, currentNode))
+                        br = True
+                        break
+                if br:
+                    break
+        return currentNode
+
+    rootNode = constructNode([0, n], grammar.startSymbol, None)
+    printCYKTable(cykTable)
+    printCYKPTable(cykPTable)
+    printParseTree(rootNode)
+    return rootNode
+
+def getLeafNodes(rootNode):
+    leaves = []
+    #Process
+        #Input: currentNode
+        #If currentNode has no children
+            #Add to leaves
+        #Else
+            #Call this process with child nodes
+    def findLeaves(currentNode):
+        if currentNode.hasChildren():
+            findLeaves(currentNode.children[0])
+            findLeaves(currentNode.children[1])
+        else:
+            leaves.append(currentNode)
+
+    findLeaves(rootNode)
+    return leaves
+
+def acceptEquation():
+    equation = input("Equation: ")
+    return equation.replace(" ", "")
 
 def main():
-    g = genTestGrammar()
+    g = genEquationGrammar()
     print(g.output())
-    print(g.isTerminal("q"))
+    equation = acceptEquation()
+    print()
+    ret = g.generates(equation)
+    gen = ret[0]
+    cykTable = ret[1]
+    cykPTable = ret[2]
+    n = ret[3]
+    print("Grammar generates " + equation + "? " + str(gen) + "\n")
+
+    rootNode = constructParseTree(cykTable, cykPTable, g, n-1)
+    leaves = getLeafNodes(rootNode)
+    print("\n")
+    for leaf in leaves:
+        print(leaf.nodeSymbol)
 
 main()
