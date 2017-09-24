@@ -43,7 +43,8 @@ def printParseTree(rootNode):
     print(rootNode.nodeSymbol)
     if len(rootNode.children) > 0:
         printParseTree(rootNode.children[0])
-        printParseTree(rootNode.children[1])
+        if len(rootNode.children) > 1:
+            printParseTree(rootNode.children[1])
 
 
 def constructParseTree(cykTable, cykPTable, grammar, n):
@@ -79,7 +80,6 @@ def constructParseTree(cykTable, cykPTable, grammar, n):
     rootNode = constructNode([0, n], grammar.startSymbol, None)
     printCYKTable(cykTable)
     printCYKPTable(cykPTable)
-    printParseTree(rootNode)
     return rootNode
 
 def getLeafNodes(rootNode):
@@ -100,6 +100,11 @@ def getLeafNodes(rootNode):
     findLeaves(rootNode)
     return leaves
 
+def parseLeafNodes(leaves, equationString):
+    if len(leaves) == len(equationString):
+        for i in range(len(leaves)):
+            leaves[i].children.append(ParseTree(equationString[i], leaves[i]))
+
 def acceptEquation():
     equation = input("Equation: ")
     return equation.replace(" ", "")
@@ -118,6 +123,8 @@ def main():
 
     rootNode = constructParseTree(cykTable, cykPTable, g, n-1)
     leaves = getLeafNodes(rootNode)
+    parseLeafNodes(leaves, equation)
+    printParseTree(rootNode)
     print("\n")
     for leaf in leaves:
         print(leaf.nodeSymbol)
