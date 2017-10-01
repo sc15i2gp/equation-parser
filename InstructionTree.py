@@ -77,6 +77,8 @@ def evaluateInstructionTree(instructionTree):
             return lResult / rResult
         elif currentNode.operator is "^":
             return lResult ** rResult
+        elif currentNode.operator is "%":
+            return lResult % rResult
 
 def printInstructionTree(rootNode):
     print(rootNode.node.nodeSymbol)

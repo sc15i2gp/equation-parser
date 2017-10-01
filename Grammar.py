@@ -82,7 +82,8 @@ def genEquationGrammar():
              ["O", ["+"]],
              ["O", ["*"]],
              ["O", ["/"]],
-             ["O", ["^"]]]
+             ["O", ["^"]],
+             ["O", ["%"]]]
     productions = []
     for pair in pairs:
         productions.append(Production(pair[0], pair[1]))
