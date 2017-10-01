@@ -23,6 +23,14 @@ def parseToInstructionTree(parseTree):
     rootNode = parseTree
     return processExpression(rootNode)
 
+#Parent node always "R" node
+def processNumber(parentNode):
+    #Either R gens number or 2 "R"
+    if len(parentNode.children) > 1:
+        return processNumber(parentNode.children[0]) + processNumber(parentNode.children[1])
+    else:
+        return parentNode.children[0].nodeSymbol
+
 def processExpression(parentNode):
     lChild = parentNode.children[0]
     if len(parentNode.children) > 1:
@@ -36,8 +44,8 @@ def processExpression(parentNode):
         elif lChild.nodeSymbol == "b1" and rChild.nodeSymbol == "E2":
             return processExpression(parentNode.children[1].children[0])
         elif lChild.nodeSymbol == "R" and lChild.nodeSymbol == "R":
-            lSymbol = lChild.children[0].nodeSymbol
-            rSymbol = rChild.children[0].nodeSymbol
+            lSymbol = processNumber(lChild)
+            rSymbol = processNumber(rChild)
             numberSymbol = lSymbol + rSymbol
             number = float(numberSymbol)
             nNode = NumberNode(number)
