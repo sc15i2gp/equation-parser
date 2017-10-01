@@ -29,7 +29,6 @@ def processExpression(parentNode):
         rChild = parentNode.children[1]
         if lChild.nodeSymbol == "E" and rChild.nodeSymbol == "E1":
             iNode = InstructionNode(parentNode.children[1].children[0].children[0].nodeSymbol)
-            print(iNode.nodeSymbol)
             iTree = InstructionTree(iNode, [])
             iTree.children.append(processExpression(parentNode.children[0]))
             iTree.children.append(processExpression(parentNode.children[1].children[1]))
@@ -70,3 +69,9 @@ def evaluateInstructionTree(instructionTree):
             return lResult / rResult
         elif currentNode.operator is "^":
             return lResult ** rResult
+
+def printInstructionTree(rootNode):
+    print(rootNode.node.nodeSymbol)
+    if len(rootNode.children) > 0:
+        printInstructionTree(rootNode.children[0])
+        printInstructionTree(rootNode.children[1])

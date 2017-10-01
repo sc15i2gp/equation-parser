@@ -88,3 +88,41 @@ def genEquationGrammar():
         productions.append(Production(pair[0], pair[1]))
     g = Grammar(variables, terminals, startSymbol, productions)
     return g
+
+def printCYKPTable(cykPTable):
+    print("CYK P Table: ")
+    bar = ""
+    for i in range(160):
+        bar += "-"
+    print(bar)
+    for row in cykPTable:
+        for column in row:
+            string = str(column)
+            maxStrLen = 32
+            for i in range(maxStrLen - len(string)):
+                string += " "
+            print(string, end="")
+        print()
+    print("\n")
+
+def printCYKTable(cykTable):
+    print("CYK Table: ")
+    bar = ""
+    for i in range(160):
+        bar += "-"
+    print(bar)
+    for row in cykTable:
+        for column in row:
+            maxStrLen = 32
+            string = "["
+            if len(column) > 0:
+                string += column[0]
+                if len(column) > 1:
+                    string += ", " + column[1]
+            string += "]"
+            strLen = len(string)
+            for i in range(maxStrLen - strLen):
+                string += " "
+            print(string, end="")
+        print()
+    print("\n")
