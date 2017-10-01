@@ -123,5 +123,6 @@ def main():
 
     iTree = parseToInstructionTree(rootNode)
     printInstructionTree(iTree)
+    print(evaluateInstructionTree(iTree))
 
 main()

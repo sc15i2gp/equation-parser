@@ -50,3 +50,23 @@ def processExpression(parentNode):
         nNode = NumberNode(number)
         iTree = InstructionTree(nNode, [])
         return iTree
+
+def evaluateInstructionTree(instructionTree):
+    currentNode = instructionTree.node
+    if type(currentNode) is NumberNode:
+        return currentNode.number
+    else:
+        lChild = instructionTree.children[0]
+        rChild = instructionTree.children[1]
+        lResult = evaluateInstructionTree(lChild)
+        rResult = evaluateInstructionTree(rChild)
+        if currentNode.operator is "+":
+            return lResult + rResult
+        elif currentNode.operator is "-":
+            return lResult - rResult
+        elif currentNode.operator is "*":
+            return lResult * rResult
+        elif currentNode.operator is "/":
+            return lResult / rResult
+        elif currentNode.operator is "^":
+            return lResult ** rResult
