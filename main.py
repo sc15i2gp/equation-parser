@@ -1,5 +1,6 @@
 from Grammar import *
 from ParseTree import *
+from InstructionTree import *
 
 def printCYKPTable(cykPTable):
     print("CYK P Table: ")
@@ -46,17 +47,14 @@ def printParseTree(rootNode):
         if len(rootNode.children) > 1:
             printParseTree(rootNode.children[1])
 
+def printInstructionTree(rootNode):
+    print(rootNode.node.nodeSymbol)
+    if len(rootNode.children) > 0:
+        printInstructionTree(rootNode.children[0])
+        printInstructionTree(rootNode.children[1])
 
 def constructParseTree(cykTable, cykPTable, grammar, n):
-    #Process:
-        #Input: current node coords in table, currentSymbol, parent node
-        #Create current node: ParseTree(currentSymbol, parent node)
-        #Get coords for child symbols
-        #If coords not -1
-            #For each combination of symbols:
-                #If the current node generates the 2 symbols:
-                    #Set left child node as 1st symbol
-                    #Set right child node as 2nd symbol
+
     def constructNode(currentNodeCoords, currentSymbol, parentNode):
         currentNode = ParseTree(currentSymbol, parentNode)
         currentTableList = cykPTable[currentNodeCoords[0]][currentNodeCoords[1]]
@@ -84,12 +82,7 @@ def constructParseTree(cykTable, cykPTable, grammar, n):
 
 def getLeafNodes(rootNode):
     leaves = []
-    #Process
-        #Input: currentNode
-        #If currentNode has no children
-            #Add to leaves
-        #Else
-            #Call this process with child nodes
+
     def findLeaves(currentNode):
         if currentNode.hasChildren():
             findLeaves(currentNode.children[0])
@@ -109,6 +102,8 @@ def acceptEquation():
     equation = input("Equation: ")
     return equation.replace(" ", "")
 
+#In parse tree, for brackets, the closing bracket is always the rightmost leaf node of the
+#opening bracket's parent node
 def main():
     g = genEquationGrammar()
     print(g.output())
@@ -125,8 +120,8 @@ def main():
     leaves = getLeafNodes(rootNode)
     parseLeafNodes(leaves, equation)
     printParseTree(rootNode)
-    print("\n")
-    for leaf in leaves:
-        print(leaf.nodeSymbol)
+
+    iTree = parseToInstructionTree(rootNode)
+    printInstructionTree(iTree)
 
 main()
