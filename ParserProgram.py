@@ -8,6 +8,16 @@ class EquationParserProgram:
         self.command = ""
         self.result = ""
         self.grammar = genEquationGrammar()
+        self.printProgram()
+
+    def printProgram(self):
+        print("Equation Interpreter: ")
+        print("--------------------------------------------")
+        print("\nInput Commands: \n\"print\" - Prints the grammar which generates arithmetic equations")
+        print("\"quit\" - Exits the interpreter")
+        print("Any valid arithmetic expression is accepted and evaluated\n")
+        print("--------------------------------------------")
+        print()
 
     def acceptInput(self):
         self.command = input(">>> ")
@@ -22,6 +32,8 @@ class EquationParserProgram:
             self.result = "Goodbye"
         elif self.command == "print grammar" or self.command == "print":
             self.result = self.grammar.output()
+        elif self.command == "":
+            self.result = "Type something in, you sausage."
         else:
             self.command = self.command.replace(" ", "")
             results = self.grammar.generates(self.command)
